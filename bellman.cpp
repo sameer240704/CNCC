@@ -1,84 +1,83 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
+#include <bits/stdc++.h>
+using namespace std;
 
-struct Edge {
-    int source, destination, weight;
-};
+#define MAX_VERTICES 100;
 
-struct Graph {
-    int V; 
-    int E; 
-    struct Edge* edge; 
-};
+vector<int> BellmanFord(vector<vector<int>> edges, int V, int source) {
+    vector<int> dist(V, 1e8);
+    dist[source] = 0;
 
-struct Graph* createGraph(int V, int E) {
-    struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
-    graph->V = V;
-    graph->E = E;
-    graph->edge = (struct Edge*)malloc(E * sizeof(struct Edge));
-    return graph;
-}
+    for(int i=0 ; i<V ; i++) {
+        for(vector<int> edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int w = edge[2];
 
-void BellmanFord(struct Graph* graph, int source) {
-    int V = graph->V;
-    int E = graph->E;
-    int distance[V];
-    
-    for (int i = 0; i < V; i++) {
-        distance[i] = INT_MAX;
-    }
-    distance[source] = 0;
-    
-    for (int i = 1; i <= V - 1; i++) {
-        for (int j = 0; j < E; j++) {
-            int u = graph->edge[j].source;
-            int v = graph->edge[j].destination;
-            int weight = graph->edge[j].weight;
-            if (distance[u] != INT_MAX && distance[u] + weight < distance[v]) {
-                distance[v] = distance[u] + weight;
+            if(dist[u] != 1e8 && dist[u] + w < dist[v]) {
+                if(i == V-1)
+                    return {-1};
+                dist[v] = dist[u] + w;
             }
         }
     }
-    
-    for (int i = 0; i < E; i++) {
-        int u = graph->edge[i].source;
-        int v = graph->edge[i].destination;
-        int weight = graph->edge[i].weight;
-        if (distance[u] != INT_MAX && distance[u] + weight < distance[v]) {
-            printf("Graph contains a negative weight cycle\n");
-            return;
-        }
-    }
-    
-    printf("Vertex \t Distance from Source\n");
-    for (int i = 0; i < V; i++) {
-        printf("%d \t\t %d\n", i, distance[i]);
-    }
+
+    return dist;
 }
 
 int main() {
-    int V, E;
-    
-    printf("Enter number of vertices and edges: ");
-    scanf("%d %d", &V, &E);
-    
-    struct Graph* graph = createGraph(V, E);
-    
-    printf("Enter source, destination, and weight for each edge:\n");
-    for (int i = 0; i < E; i++) {
-        scanf("%d %d %d", &graph->edge[i].source, &graph->edge[i].destination,
-              &graph->edge[i].weight);
-    }
-    
-    int source;
-    printf("Enter source vertex: ");
-    scanf("%d", &source);
-    
-    BellmanFord(graph, source);
-    
-    free(graph->edge);
-    free(graph);
+    int V, E, source;
+    cout << "Enter the number of vertices: ";
+    cin >> V;
 
-    return 0;
+    cout << "Enter the number of edges: ";
+    cin >> E;
+
+    cout << "Enter the source of the graph: ";
+    cin >> source;
+
+    vector<vector<int>> edges;
+    cout << "Enter the edges (u v weight):" << endl;
+    for(int i=0 ; i<E ; i++) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        edges.push_back({u, v, w});
+    }
+
+    vector<int> result;
+    result = BellmanFord(edges, V, source);
+
+    if(result.size() == 1 && result[0] == -1) {
+        cout << "Negative Cycle Detected" << endl;
+    } else {
+        cout << "Shortest distances from source " << source << ":" << endl;
+        for(int i=0 ; i<V ; i++) {
+            if(result[i] == 1e8)
+                cout << "Vertex " << i << ": INF" << endl;
+            else
+                cout << "Vertex " << i << ": "<< result[i] << endl;
+        }   
+    }
 }
+
+/*
+
+Input:-
+Enter the number of vertices: 5
+Enter the number of edges: 5
+Enter the source of the graph: 0
+Enter the edges (u v weight):
+0 1 5
+1 2 1
+1 3 2
+2 4 1
+4 3 -1
+
+Output:-
+Shortest distances from source 0:
+Vertex 0: 0
+Vertex 1: 5
+Vertex 2: 6
+Vertex 3: 6
+Vertex 4: 7
+
+*/

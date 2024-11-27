@@ -65,3 +65,27 @@ int main() {
 
     return 0;
 }
+
+/*
+
+Input:- 
+
+Enter the number of vertices: 5
+Enter the source of the graph: 0
+Enter the Adjacency Matrix: 
+0 10 0 0 5
+0 0 1 0 2
+0 0 0 4 0
+7 0 6 0 0
+0 3 9 2 0
+
+Output:-
+
+Vertex  Distance from Source
+0       0
+1       8
+2       9
+3       7
+4       5
+
+*/
