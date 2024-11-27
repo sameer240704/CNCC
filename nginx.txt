@@ -1,0 +1,17 @@
+-- sudo apt-get install nginx
+
+-- sudo systemctl enable nginx.service
+
+-- sudo systemctl start nginx.service
+
+-- sudo systemctl status nginx.service
+
+-- cd /var/www/html
+
+-- ll -a
+
+-- sudo nano index.nginx-debian.html
+
+After saving file do
+
+-- sudo systemctl restart nginx.service
